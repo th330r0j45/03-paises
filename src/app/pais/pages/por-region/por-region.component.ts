@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Country } from '../../interfaces/pais.interface';
 import { PaisService } from '../../services/pais.service';
 
@@ -8,22 +8,35 @@ import { PaisService } from '../../services/pais.service';
   styles: [
   ]
 })
-export class PorRegionComponent {
+export class PorRegionComponent  {
 
+  regiones: string[] = ['africa','americas','asia','europe','oceania'];
+  regionActiva:string = '';
+  paises:Country[] = [];
   termino: string = '';
   hayError: boolean = false;
-  paises : Country[] = [];
+
   constructor(
     private paisService:PaisService
   ) { }
 
-  
-  buscar(termino:string){
+  getClaseCSS(region:string){
+    return (region == this.regionActiva) 
+    ? 'btn btn-primary btn-lg p-2 btn-sm ms-2'
+    :'btn btn-outline-primary btn-lg p-2 btn-sm ms-2'
+  }
 
-    this.hayError = false;
-    this.termino = termino;
+  activarRegion( region:string){
 
-    this.paisService.buscarCapital(this.termino)
+    if (region === this.regionActiva) {
+      return;
+    }
+    
+    this.regionActiva = region;
+    this.paises = [];
+
+    //TODO: hacer el llamado al servicio.
+    this.paisService.buscarRegion(this.regionActiva)
     .subscribe( paises =>{
       console.log(paises);
       this.paises = paises;
